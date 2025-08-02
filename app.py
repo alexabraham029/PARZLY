@@ -1,3 +1,15 @@
+# ===== monkey-patch sqlite3 to use the newer bundled implementation =====
+import sys
+try:
+    import pysqlite3  # this must be in requirements.txt so it's available
+    # Override the stdlib sqlite3 module with pysqlite3
+    sys.modules["sqlite3"] = pysqlite3
+except ImportError:
+    # If this fails on Cloud it means pysqlite3-binary didn't install properly;
+    # logs will show the failure. Fall back to whatever sqlite is available (likely too old).
+    pass
+# ======================================================================
+
 import streamlit as st
 from langchain.chains import create_history_aware_retriever, create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
